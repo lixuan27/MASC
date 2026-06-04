@@ -1,0 +1,11 @@
+# --- MASC preprocessing core (clustering / mapping / relabel / decode) ---
+numpy>=1.23
+scipy>=1.9          # only used by tests/ to cross-check the construction
+
+# --- AR-backbone integration, training and evaluation ---
+# (not needed to run the MASC core or the unit tests / demo)
+torch>=2.1
+torchvision>=0.16
+pyyaml>=6.0
+torch-fidelity>=0.3.0   # FID / IS / Precision / Recall (Appendix A.4)
+matplotlib>=3.6         # optional, only for the demo visualisation

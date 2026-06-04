@@ -1,0 +1,31 @@
+MASC Reference Implementation — Research-Only License
+Copyright (c) 2026 The MASC Authors. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to use,
+copy, and modify the Software solely for non-commercial academic research and
+educational purposes, subject to the following conditions:
+
+1. The above copyright notice, this permission notice, and the accompanying
+   NOTICE file shall be included in all copies or substantial portions of the
+   Software.
+
+2. NO PATENT RIGHTS ARE GRANTED. The methods implemented or described by the
+   Software, including the Manifold-Aligned Semantic Clustering (MASC)
+   construction and its integration with autoregressive generative models, are
+   the subject of one or more pending patent applications. This license grants
+   rights only under copyright in the Software as written, and grants no
+   license, express or implied, by estoppel or otherwise, to any patents or
+   patent applications. Any commercial use, or any use that would practice a
+   claim of a pending or granted patent, requires a separate written license
+   from the authors.
+
+3. Redistributions must retain this license and the NOTICE file, and must not
+   misrepresent the origin of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MASC — Manifold-Aligned Semantic Clustering (ICML 2026)</title>
+<meta name="description" content="MASC re-introduces intrinsic codebook structure into autoregressive image generation: a plug-and-play hierarchical prior that accelerates training by up to 71% and improves LlamaGen-XL FID from 2.87 to 2.49.">
+<meta property="og:title" content="A Flat Vocabulary or a Rich Hierarchy? — MASC (ICML 2026)">
+<meta property="og:description" content="A plug-and-play manifold-aligned hierarchical prior for autoregressive image generation.">
+<meta property="og:image" content="static/images/fig1_teaser.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="container">
+    <span class="venue-badge">ICML 2026</span>
+    <h1>A Flat Vocabulary or a Rich Hierarchy?<br>Re-introducing Intrinsic Structure Transforms<br>Autoregressive Image Generation</h1>
+    <p class="subtitle">A principled, plug-and-play hierarchical prior over the visual codebook — turning a flat
+      <i>N</i>-way token prediction into a structured <i>k</i>-way one.</p>
+
+    <div class="authors">
+      <a href="#">Lixuan He</a><sup>1</sup>&nbsp;&nbsp;
+      <a href="#">Shikang Zheng</a><sup>2</sup>
+    </div>
+    <div class="affil"><sup>1</sup>Tsinghua University&nbsp;&nbsp;&nbsp;<sup>2</sup>Shanghai Jiao Tong University</div>
+
+    <div class="btn-row">
+      <a class="btn primary" href="static/MASC_paper.pdf">
+        <svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15a0 0 0 0 1 0 0H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm8 1.5V8h4.5L14 3.5zM8 13h8v1.6H8zm0 3.2h8V18H8zm0-6.4h5v1.6H8z"/></svg>
+        Paper
+      </a>
+      <a class="btn" href="https://github.com/lixuan27/MASC">
+        <svg viewBox="0 0 24 24"><path d="M12 .5A11.5 11.5 0 0 0 .5 12 11.5 11.5 0 0 0 8.4 23c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+        Code
+      </a>
+      <a class="btn" href="#bibtex">
+        <svg viewBox="0 0 24 24"><path d="M9.4 16.6 4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0L19.2 12l-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+        BibTeX
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== TEASER ===================== -->
+<section class="section">
+  <div class="container">
+    <figure class="fig">
+      <img src="static/images/fig1_teaser.png" alt="MASC high-fidelity samples">
+      <figcaption><b>Figure 1.</b> MASC enables strong high-fidelity and diverse image generation across a wide range of ImageNet classes.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===================== ABSTRACT ===================== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Abstract</h2>
+    <div class="abstract">
+      <p>Autoregressive (AR) models have shown great promise in image generation, yet they face a fundamental
+        inefficiency stemming from their core component: a vast, unstructured vocabulary of visual tokens. By treating
+        tokens as a flat set, standard models overlook the manifold structure where geometric proximity reflects
+        semantic similarity. This oversight unnecessarily complicates the prediction task, hindering training
+        efficiency and limiting generation quality.</p>
+      <p>To resolve this, we propose <b>Manifold-Aligned Semantic Clustering (MASC)</b>, a principled framework that
+        constructs a hierarchical semantic tree directly from the codebook's intrinsic geometry. Using a
+        geometry-aware distance metric and a density-driven agglomerative construction, MASC faithfully models the
+        token-embedding manifold. By transforming the flat, high-dimensional prediction into a structured hierarchical
+        task, MASC introduces a powerful inductive bias that simplifies learning. As a plug-and-play module, MASC
+        accelerates training by up to <b>71%</b> and significantly boosts generation quality, improving LlamaGen-XL's
+        FID from <b>2.87 to 2.49</b>. Crucially, MASC further serves as a convergence enabler for complex
+        architectures — establishing that structuring the prediction space is as vital as architectural innovation.</p>
+    </div>
+
+    <div class="stats" style="margin-top:40px">
+      <div class="stat"><div class="num">2.87 → 2.49</div><div class="lbl">LlamaGen-XL FID</div></div>
+      <div class="stat"><div class="num">+71%</div><div class="lbl">faster training</div></div>
+      <div class="stat"><div class="num">7+</div><div class="lbl">AR backbones boosted</div></div>
+      <div class="stat"><div class="num">0</div><div class="lbl">architectural changes</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== METHOD ===================== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">How MASC works</h2>
+    <p class="section-sub">MASC is a one-time, offline preprocessing step. It reads a trained tokenizer's codebook,
+      builds a density-driven hierarchical semantic tree, and emits a mapping that the AR model trains against —
+      <i>what</i> the model predicts changes, <i>how</i> it predicts does not.</p>
+
+    <figure class="fig">
+      <img src="static/images/fig2_pipeline.png" alt="MASC pipeline overview">
+      <figcaption><b>Figure 2.</b> Overview of the MASC-integrated AR generation pipeline. <b>Stage 1:</b> a standard
+        tokenizer yields a finalised codebook. <b>MASC Preprocessing:</b> our framework constructs a hierarchical
+        semantic tree from the codebook, producing a mapping <i>M</i> from fine-grained tokens to coarse semantic
+        branches. <b>Stage 2:</b> the transformer is trained on these simplified branch indices.</figcaption>
+    </figure>
+
+    <figure class="fig" style="margin-top:48px">
+      <img src="static/images/fig3_concept.png" alt="MASC versus k-means">
+      <figcaption><b>Figure 3.</b> Conceptual illustration of MASC versus k-means. <b>Left:</b> visual tokens reside on
+        a semantic manifold where geodesic distance is a better similarity measure than Euclidean distance.
+        <b>Right:</b> geometry-agnostic k-means produces incoherent clusters, whereas MASC's manifold-aligned,
+        centroid-free approach preserves the intrinsic data structure.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===================== 3-LINE INTEGRATION ===================== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">A plug-and-play prior in three lines</h2>
+    <p class="section-sub">MASC changes a training pipeline in exactly three places: build the coarse vocabulary once,
+      relabel the targets, and decode a predicted cluster back to a token at sampling time.</p>
+    <div class="code-card">
+      <div class="code-head"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="fname">masc_quickstart.py</span></div>
+<pre class="code"><span class="k">from</span> masc <span class="k">import</span> build_masc_tree, relabel_targets, random_sample_decode
+
+<span class="c"># (1) OFFLINE, ONCE — build the coarse vocabulary from the codebook (Algorithm 1)</span>
+tree = <span class="f">build_masc_tree</span>(codebook_embeddings, k=<span class="s">8192</span>)
+
+<span class="c"># (2) TRAIN — predict the next coarse cluster instead of the next fine token (Eq. 5)</span>
+coarse_targets = <span class="f">relabel_targets</span>(fine_token_ids, tree.mapping)
+
+<span class="c"># (3) SAMPLE — decode a predicted cluster back to a token (default strategy)</span>
+fine_tokens = <span class="f">random_sample_decode</span>(coarse_cluster_indices, mapping)</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MAIN RESULTS ===================== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Main results on LlamaGen</h2>
+    <p class="section-sub">On ImageNet 256×256, MASC consistently improves efficiency and final quality across all
+      model scales, and decisively outperforms a naïve k-means prior (vocabulary <i>k</i> = 8,192).</p>
+
+    <div class="table-wrap">
+      <table class="results">
+        <thead>
+          <tr><th>Model</th><th>Method</th><th>Params</th><th>Accel.&uarr;</th><th>FID&darr;</th><th>IS&uarr;</th><th>Prec. / Rec.&uarr;</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="model" rowspan="3">LlamaGen-B<br><small>(111M)</small></td><td class="method">Baseline</td><td>111M</td><td>–</td><td>5.56</td><td>185.1</td><td>0.85 / 0.45</td></tr>
+          <tr><td class="method">+ k-means</td><td>94M</td><td class="delta-neg">−5%</td><td>5.72</td><td>186.6</td><td>0.83 / 0.44</td></tr>
+          <tr class="ours"><td class="method">+ MASC (Ours)</td><td>94M</td><td class="delta-pos">+42%</td><td class="best">4.81</td><td class="best">206.4</td><td>0.86 / 0.48</td></tr>
+
+          <tr><td class="model" rowspan="3">LlamaGen-L<br><small>(343M)</small></td><td class="method">Baseline</td><td>343M</td><td>–</td><td>3.38</td><td>246.3</td><td>0.83 / 0.51</td></tr>
+          <tr><td class="method">+ k-means</td><td>311M</td><td class="delta-neg">−10%</td><td>3.81</td><td>221.2</td><td>0.77 / 0.55</td></tr>
+          <tr class="ours"><td class="method">+ MASC (Ours)</td><td>311M</td><td class="delta-pos">+55%</td><td class="best">2.92</td><td class="best">259.2</td><td>0.85 / 0.57</td></tr>
+
+          <tr><td class="model" rowspan="3">LlamaGen-XL<br><small>(775M)</small></td><td class="method">Baseline</td><td>775M</td><td>–</td><td>2.87</td><td>267.6</td><td>0.82 / 0.55</td></tr>
+          <tr><td class="method">+ k-means</td><td>719M</td><td class="delta-neg">−8%</td><td>3.09</td><td>244.3</td><td>0.76 / 0.56</td></tr>
+          <tr class="ours"><td class="method">+ MASC (Ours)</td><td>719M</td><td class="delta-pos">+57%</td><td class="best">2.58</td><td class="best">272.1</td><td>0.83 / 0.58</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-caption"><b>Table 1.</b> Comprehensive performance analysis on ImageNet 256×256. MASC reduces task
+      complexity, accelerates training, and yields superior generation quality at every scale.</p>
+
+    <figure class="fig" style="margin-top:52px">
+      <img src="static/images/fig6_dynamics.png" alt="Training dynamics IS and FID">
+      <figcaption><b>Figure 6.</b> LlamaGen-L training dynamics: MASC reaches the baseline's final IS/FID in roughly
+        half the training time (<b>2× faster</b>), and ultimately converges to a better result.</figcaption>
+    </figure>
+    <figure class="fig" style="margin-top:48px">
+      <img src="static/images/fig8_entropy.png" alt="Training dynamics with prediction entropy">
+      <figcaption><b>Figure 8.</b> By operating in a low-entropy prediction space, MASC accelerates convergence —
+        consistently higher IS, lower FID, and lower prediction entropy throughout training.</figcaption>
+    </figure>
+
+    <h3 style="text-align:center; margin:56px 0 6px; font-size:1.25rem;">Impact of the coarse vocabulary size <i>k</i></h3>
+    <p class="section-sub">MASC is robust to <i>k</i>: it reaches its <b>best FID of 2.49</b> at <i>k</i>=4,096 and its
+      <b>best acceleration of +71%</b> at <i>k</i>=2,048 (LlamaGen-XL).</p>
+    <div class="table-wrap" style="max-width:560px;margin:0 auto;">
+      <table class="results">
+        <thead><tr><th>Method</th><th>Vocab (<i>k</i>)</th><th>FID&darr;</th><th>IS&uarr;</th><th>Accel.&uarr;</th></tr></thead>
+        <tbody>
+          <tr><td class="method">Baseline</td><td>16,384</td><td>2.87</td><td>267.6</td><td>–</td></tr>
+          <tr class="ours"><td class="method">MASC</td><td>8,192</td><td>2.58</td><td>272.1</td><td class="delta-pos">+57%</td></tr>
+          <tr class="ours"><td class="method">MASC</td><td>4,096</td><td class="best">2.49</td><td>269.8</td><td class="delta-pos">+63%</td></tr>
+          <tr class="ours"><td class="method">MASC</td><td>2,048</td><td>2.65</td><td>264.4</td><td class="delta-pos best">+71%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-caption"><b>Table 2.</b> Ablation on vocabulary size <i>k</i> with LlamaGen-XL.</p>
+  </div>
+</section>
+
+<!-- ===================== PLUG-AND-PLAY ===================== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">A universal, plug-and-play booster</h2>
+    <p class="section-sub">MASC is not tied to LlamaGen. As a drop-in module it improves FID, IS and training speed
+      across diverse AR paradigms — and rescues advanced architectures that otherwise fail to converge.</p>
+
+    <div class="table-wrap">
+      <table class="results">
+        <thead><tr><th>Framework</th><th>Method</th><th>Wall-clock (h)</th><th>Accel.&uarr;</th><th>FID&darr;</th><th>IS&uarr;</th></tr></thead>
+        <tbody>
+          <tr><td class="model" rowspan="2">VAR-d24</td><td class="method">Baseline</td><td>520</td><td>–</td><td>2.09</td><td>312.9</td></tr>
+          <tr class="ours"><td class="method">+ MASC (2k)</td><td>374</td><td class="delta-pos">+28%</td><td class="best">1.98</td><td class="best">314.4</td></tr>
+
+          <tr><td class="model" rowspan="2">RandAR-XL</td><td class="method">Baseline</td><td>480</td><td>–</td><td>2.25</td><td>317.8</td></tr>
+          <tr class="ours"><td class="method">+ MASC (8k)</td><td>326</td><td class="delta-pos">+32%</td><td class="best">2.02</td><td class="best">320.5</td></tr>
+
+          <tr><td class="model" rowspan="2">CTF-LlamaGen-L</td><td class="method">Baseline</td><td>360</td><td>–</td><td>2.97</td><td>291.5</td></tr>
+          <tr class="ours"><td class="method">+ MASC (8k)</td><td>255</td><td class="delta-pos">+29%</td><td class="best">2.51</td><td class="best">296.9</td></tr>
+
+          <tr><td class="model" rowspan="2">IAR-XL</td><td class="method">Baseline</td><td>467</td><td>–</td><td>2.52</td><td>248.1</td></tr>
+          <tr class="ours"><td class="method">+ MASC (8k)</td><td>340</td><td class="delta-pos">+32%</td><td class="best">2.35</td><td class="best">284.3</td></tr>
+
+          <tr><td class="model" rowspan="2">GigaTok-L</td><td class="method">Baseline</td><td>420</td><td>–</td><td>3.39</td><td>263.7</td></tr>
+          <tr class="ours"><td class="method">+ MASC (8k)</td><td>340</td><td class="delta-pos">+19%</td><td class="best">3.35</td><td>263.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="tbl-caption"><b>Table 3.</b> MASC as a plug-and-play module across SOTA AR frameworks on ImageNet
+      (selected rows). It consistently improves quality while substantially reducing wall-clock time.</p>
+
+    <div class="banner" style="background:#eef0fe;border-color:#c7caf6;color:#3730a3;max-width:760px;">
+      <b>Convergence enabler.</b> The permutation-based RAR framework <i>fails to converge</i> when trained directly on
+      large-vocabulary tokenizers (16k tokens). With MASC it trains stably — RAR-L + LlamaGen reaches
+      <b>FID 1.61 / IS 304.1</b> and RAR-L + GigaTok reaches <b>FID 1.57 / IS 307.4</b> (Table 5).
+    </div>
+  </div>
+</section>
+
+<!-- ===================== QUALITATIVE ===================== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Why it works: semantic coherence</h2>
+    <p class="section-sub">MASC clusters group semantically interchangeable tokens. Replacing a token with a random
+      member of its own cluster preserves global structure and object identity — geometry-agnostic k-means does not.</p>
+
+    <div class="two-col">
+      <figure class="fig">
+        <img src="static/images/fig4_coherence.png" alt="Semantic replacement test">
+        <figcaption><b>Figure 4.</b> Semantic Replacement Test. Replacing image tokens with random cluster members
+          reveals that MASC (c) preserves semantic structure, whereas k-means (b) introduces artifacts. MASC yields
+          higher intra-cluster semantic similarity (d) and groups coherent textures (e).</figcaption>
+      </figure>
+      <figure class="fig">
+        <img src="static/images/fig5_visual.png" alt="K-means versus MASC samples">
+        <figcaption><b>Figure 5.</b> Visual comparison between k-means and MASC. K-means results exhibit
+          high-frequency noise and structural collapse; MASC preserves clean, coherent semantics.</figcaption>
+      </figure>
+    </div>
+
+    <figure class="fig" style="margin-top:52px">
+      <img src="static/images/fig9_gallery.png" alt="MASC sample gallery">
+      <figcaption><b>Figure 9.</b> Additional samples generated by LlamaGen-XL + MASC (CFG scale 2.5), spanning
+        animals, objects, food and scenes.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===================== GET STARTED ===================== -->
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Get started</h2>
+    <p class="section-sub">The reference implementation of the MASC construction, relabelling, decoding and diagnostics
+      is open and self-verifiable. The AR backbones it enhances are obtained from their official repositories.</p>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><h3>Build the tree</h3>
+        <p><code>python scripts/build_masc_tree.py --codebook codebook.npy --k 8192</code> runs Algorithm 1 and writes
+          the token→cluster mapping. Try <code>--demo</code> for a no-download verification.</p></div>
+      <div class="step"><div class="n">2</div><h3>Train</h3>
+        <p>Relabel targets to coarse clusters and train any AR backbone with the provided objective and the
+          Table 8 hyperparameters in <code>configs/</code>.</p></div>
+      <div class="step"><div class="n">3</div><h3>Sample</h3>
+        <p>Decode predicted clusters back to tokens with the parameter-free random-sampling decoder, then render with
+          the tokenizer decoder.</p></div>
+    </div>
+    <div class="btn-row" style="margin-top:34px">
+      <a class="btn primary" href="https://github.com/lixuan27/MASC">View the code on GitHub →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BIBTEX ===================== -->
+<section class="section" id="bibtex">
+  <div class="container">
+    <h2 class="section-title">BibTeX</h2>
+<pre class="bibtex">@inproceedings{he2026masc,
+  title     = {A Flat Vocabulary or a Rich Hierarchy? Re-introducing Intrinsic
+               Structure Transforms the Autoregressive Image Generation},
+  author    = {He, Lixuan and Zheng, Shikang},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML)},
+  year      = {2026}
+}</pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p>MASC — Manifold-Aligned Semantic Clustering &middot; ICML 2026<br>
+      <a href="https://github.com/lixuan27/MASC">github.com/lixuan27/MASC</a> &middot;
+      <a href="static/MASC_paper.pdf">Paper (PDF)</a></p>
+    <p style="margin-top:14px;color:#6b7393;font-size:0.82rem;">Page design adapted for the MASC project.
+      Figures © the authors, from the ICML 2026 camera-ready.</p>
+  </div>
+</footer>
+
+</body>
+</html>

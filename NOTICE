@@ -1,0 +1,28 @@
+MASC — Manifold-Aligned Semantic Clustering
+ICML 2026
+
+This repository is the official reference implementation accompanying the paper
+"A Flat Vocabulary or a Rich Hierarchy? Re-introducing Intrinsic Structure
+Transforms the Autoregressive Image Generation."
+
+Scope of this release
+----------------------
+The repository provides the core MASC construction (the manifold-aligned
+distance and the density-driven hierarchical clustering of Algorithm 1), the
+coarse-target relabelling and decoding used to integrate the prior into an
+autoregressive model, and diagnostics that let readers verify the method and its
+reported behaviour. MASC is a plug-and-play module; the autoregressive backbones
+it enhances are third-party works obtained from their official repositories and
+are not redistributed here. See docs/reproduction.md.
+
+Patent notice
+-------------
+The MASC method is the subject of one or more pending patent applications. This
+code is released under a research-only license that grants no patent rights (see
+LICENSE). Commercial use requires a separate written agreement with the authors.
+
+Third-party components
+----------------------
+Reproduction builds on the official releases of, among others, LlamaGen, VAR,
+RandAR, IAR, CTF, GigaTok and RAR, each under its own license. Please consult
+and comply with the license of any backbone you use.
